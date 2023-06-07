@@ -22,34 +22,67 @@ const markup = galleryItems
 gallery.insertAdjacentHTML("beforeend", markup);
 
 gallery.addEventListener("click", onClick);
-
 function onClick(evt) {
   evt.preventDefault();
   if (!evt.target.classList.contains("gallery__image")) {
     return;
   }
   const originalImage = evt.target.dataset.source;
-  const descriptionItem = evt.target.alt;
-
   const instance = basicLightbox.create(
-    `<img src="${originalImage}"  alt = "${descriptionItem}" width="800" height="600">    
-`
+    `<img src="${originalImage}"  width="800" height="600">`,
+    {
+      onShow: (instance) => {
+        window.addEventListener("keydown", closeModalWithEscape);
+      },
+
+      onClose: (instance) => {
+        window.removeEventListener("keydown", closeModalWithEscape);
+      },
+    }
   );
   instance.show();
 
-  const text = document.querySelectorAll("img");
-  text.forEach((el) => {
-    el.style.color = "white";
-    el.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-  });
-
-  document.addEventListener("keydown", closeModalWithEscape);
-
   function closeModalWithEscape(evt) {
-    if (evt.code === "Escape") {
+    if (evt.key === "Escape") {
       instance.close();
     }
   }
 }
 
 console.log(galleryItems);
+
+// === 2 === Окремо винесена ф-я closeModalWithEscape =======
+
+// function onClick(evt) {
+//   evt.preventDefault();
+//   if (!evt.target.classList.contains("gallery__image")) {
+//     return;
+//   }
+//   const originalImage = evt.target.dataset.source;
+//   const instance = basicLightbox.create(
+//     `<img src="${originalImage}"  width="800" height="600">`,
+//     {
+//       onShow: (instance) => {
+//         window.addEventListener(
+//           "keydown",
+//           closeModalWithEscape.bind(null, instance)
+//         );
+//       },
+
+//       onClose: (instance) => {
+//         window.removeEventListener(
+//           "keydown",
+//           closeModalWithEscape.bind(null, instance)
+//         );
+//       },
+//     }
+//   );
+//   instance.show();
+// }
+// function closeModalWithEscape(instance, evt) {
+//   if (evt.key === "Escape") {
+//     instance.close();
+//   }
+// }
+
+
